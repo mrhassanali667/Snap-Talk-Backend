@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h1>Test</h1>
+
+    <script>
+      window.addEventListener("beforeunload", (e) => {
+        console.log("beforeunload fired!");
+
+        e.preventDefault();
+      });
+    </script>
+  </body>
+</html>
