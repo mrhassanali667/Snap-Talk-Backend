@@ -1,5 +1,5 @@
 import { createData } from "../db/index.js"
-import userScema from "../schemas/userschema.js"
+// import userScema from "../schemas/userschema.js"
 import jwt from 'jsonwebtoken'
 import Model from '../../auth/models/authusermodel.js'
 
@@ -9,7 +9,7 @@ const postData = async (token, body) => {
             let err = new Error("Request body is missing or empty.")
             throw { message: err.message, code: 400 }
         }
-        userScema.validateSync(body)
+        // userScema.validateSync(body)
         const { email } = jwt.verify(token, process.env.JWT_KEY)
         const authUser = await Model.findOne({ email: email })
         const data = await createData({

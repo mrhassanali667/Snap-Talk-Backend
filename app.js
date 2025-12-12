@@ -1,5 +1,9 @@
-import express from 'express'
-import routes from './src/routes/index.js';
+import express from 'express';
+import routes from './src/routes/index.js'
+import cors from 'cors'
+import './src/config/db.js'
+import './src/config/cloudinary.js'
+
 
 const port = 3000
 const app = express()

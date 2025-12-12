@@ -1,8 +1,18 @@
-import * as yup from 'yup'
+import { z } from "zod";
 
-const authUserSchema = yup.object({
-    email: yup.string("Email must be a valid string.").email("email must ba a valid email address.").required("email is required"),
-    password: yup.string("Password must be a valid string.").required("password is required").min(6, "password must be at least 6 characters long.")
-})
+export const authUserSchema = z.object({
+    username: z
+        .string()
+        .min(3, { message: "Username must be at least 3 characters long." })
+        .max(30, { message: "Username cannot exceed 30 characters." }),
 
-export default authUserSchema
+    email: z
+        .string()
+        .email({ message: "Please provide a valid email address." }),
+
+    password: z
+        .string()
+        .min(6, { message: "Password must be at least 6 characters long." })
+});
+
+export default authUserSchema;

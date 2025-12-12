@@ -10,9 +10,9 @@ const registerController = async (req, res) => {
             token: token
         })
     } catch (error) {
-        let code = error?.code
+        let code = error?.code || 500
         res.status(500).json({
-            message: error?.message,
+            message: error?.message || "internal server error", 
             status: code
         })
     }

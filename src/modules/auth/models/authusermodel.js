@@ -2,6 +2,13 @@ import mongoose, { Schema } from "mongoose";
 
 
 const dataSchema = new Schema({
+
+    username: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true
+    },
     email: {
         type: String,
         required: true,
@@ -13,4 +20,4 @@ const dataSchema = new Schema({
     }
 })
 
-export default mongoose.model('AuthUser', dataSchema)
+export default mongoose.model('Auth', dataSchema)

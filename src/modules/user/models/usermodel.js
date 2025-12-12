@@ -1,53 +1,18 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { mongo, Schema } from "mongoose";
+import { fr, is } from "zod/locales";
 
 
 const dataSchema = new Schema({
-    authId: {
-        type: mongoose.Types.ObjectId,
-        ref: 'AuthUser',
-        required: true
-    },
-    fullName: {
-        type: String,
-        required: true
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    phone: {
-        type: Number,
-        required: true
-    },
-    age: {
-        type: Number,
-        required: true
-    },
-    address: {
-        city: {
-            type: String,
-            required: true
-        },
-        street: {
-            type: String,
-            required: true
-        },
-        postalCode: {
-            type: String,
-            required: true
-        },
-        country: {
-            type: String,
-            required: true
-        }
-
-    },
-    isSeller: {
-        type: Boolean,
-        required: true,
-        default: false
-    }
+    authId: { type: mongoose.Types.ObjectId, required: true, unique: true },
+    username: { type: String, required: true, unique: true },
+    email: { type: String, required: true, unique: true },
+    about: { type: String, default: "" },
+    profilePicture: { type: String, default: null },
+    isAdmin: { type: Boolean, default: false },
+    isOnline: { type: Boolean, default: false },
+    lastSeen: { type: Date, default: Date.now },
+    friends: [{ type: mongoose.Types.ObjectId, ref: 'User', default: [] }],
+    blockedUsers: [{ type: mongoose.Types.ObjectId, ref: 'User',default: [] }],
 })
 
 export default mongoose.model('User', dataSchema)

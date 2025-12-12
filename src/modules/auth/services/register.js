@@ -3,6 +3,7 @@ import { registerUser } from "../db/index.js"
 import bcrypt from 'bcrypt'
 import authUserSchema from "../schemas/authuserschema.js"
 import 'dotenv/config'
+import User from "../../user/models/usermodel.js"
 
 const signUpUser = async (body) => {
     try {
@@ -10,15 +11,18 @@ const signUpUser = async (body) => {
             let err = new Error("Request body is missing or empty.")
             throw { message: err.message, code: 400 }
         }
-        authUserSchema.validateSync(body)
+        authUserSchema.parse(body)
         const password = bcrypt.hashSync(body.password, 10)
         const newUser = await registerUser({
             ...body,
             password,
         })
-        let user = newUser.toObject()
-        delete user.password
-        let token = jwt.sign({ email: user.email }, process.env.JWT_KEY)
+        const user = await User.create({
+            authId: newUser._id,
+            username: newUser.username,
+            email: newUser.email,
+        })
+        let token = jwt.sign({ email: newUser.email }, process.env.JWT_KEY)
         return { user, token: token }
     } catch (error) {
         console.log(error)

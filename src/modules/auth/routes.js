@@ -6,5 +6,6 @@ const authRoutes = Router();
 
 authRoutes.post('/login', loginController)
 authRoutes.post('/register', registerController)
+authRoutes.gwt('/user', registerController)
 
 export default authRoutes
