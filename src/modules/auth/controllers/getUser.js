@@ -5,7 +5,7 @@ const getUserController = async (req, res) => {
             message: "User fetched successfully",
             user: user,
             status: 200
-        });
+        })
     } catch (error) {
         let code = error?.code || 500;
         res.status(code).json({
