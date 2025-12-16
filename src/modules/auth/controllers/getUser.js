@@ -1,16 +1,26 @@
+import User from "../../user/models/usermodel.js";
+
 const getUserController = async (req, res) => {
     try {
-        const user = req.userEmail; // Assuming user is attached to req in a previous middleware like authentication
+        console.log("Request User Email:", req.userEmail);
+        const user = await User.findOne({ email: req.userEmail }); // Assuming user is attached to req in a previous middleware like authentication
+        if (user) {
+            console.log("Fetched User:", user);
+            return res.status(200).json({
+                message: "User fetched successfully",
+                user: user,
+                status: 200
+            })
+        }
         res.status(200).json({
-            message: "User fetched successfully",
-            user: user,
-            status: 200
+            message: "User not found",
+            user: null,
+            status: 404
         })
     } catch (error) {
-        let code = error?.code || 500;
         res.status(code).json({
-            message: error?.message || "internal server error",
-            status: code
+            message: "internal server error",
+            status: 500
         });
     }
 }

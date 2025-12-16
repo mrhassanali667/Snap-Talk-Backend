@@ -1,53 +1,31 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
 
+const messageSchema = new mongoose.Schema(
+  {
+    sender: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    receiver: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    text: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    isRead: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-const dataSchema = new Schema({
-    authId: {
-        type: mongoose.Types.ObjectId,
-        ref: 'AuthUser',
-        required: true
-    },
-    fullName: {
-        type: String,
-        required: true
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    phone: {
-        type: Number,
-        required: true
-    },
-    age: {
-        type: Number,
-        required: true
-    },
-    address: {
-        city: {
-            type: String,
-            required: true
-        },
-        street: {
-            type: String,
-            required: true
-        },
-        postalCode: {
-            type: String,
-            required: true
-        },
-        country: {
-            type: String,
-            required: true
-        }
+export default mongoose.model("Message", messageSchema);
 
-    },
-    isSeller: {
-        type: Boolean,
-        required: true,
-        default: false
-    }
-})
-
-export default mongoose.model('User', dataSchema)

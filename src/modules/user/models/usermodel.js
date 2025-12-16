@@ -12,7 +12,9 @@ const dataSchema = new Schema({
     isOnline: { type: Boolean, default: false },
     lastSeen: { type: Date, default: Date.now },
     friends: [{ type: mongoose.Types.ObjectId, ref: 'User', default: [] }],
-    blockedUsers: [{ type: mongoose.Types.ObjectId, ref: 'User',default: [] }],
+    blockedUsers: [{ type: mongoose.Types.ObjectId, ref: 'User', default: [] }],
+}, {
+    timestamps: true
 })
 
 export default mongoose.model('User', dataSchema)

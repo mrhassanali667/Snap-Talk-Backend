@@ -1,32 +1,19 @@
-import * as Yup from "yup";
+import { z } from "zod";
 
 export const userSchema = Yup.object({
-    fullName: Yup.string()
-        .required("Full name is required"),
+    sender: z
+        .string()
+        .min(1, "Sender is required"),
 
-    phone: Yup.number("Phone must be a number")
-        .required("Phone is required"),
+    receiver: z
+        .string()
+        .min(1, "Receiver is required"),
 
-    age: Yup.number("Age must be a number")
-        .required("Age is required"),
+    status: z
+        .enum(["pending", "accepted", "rejected"])
+        .optional()
+        .default("pending"),
 
-    address: Yup.object({
-        city: Yup.string()
-            .required("City is required"),
-
-        street: Yup.string()
-            .required("Street is required"),
-
-        postalCode: Yup.string()
-            .required("Postal code is required"),
-
-        country: Yup.string()
-            .required("Country is required")
-    }).required("Address is required"),
-
-    isSeller: Yup.boolean()
-        .required("isSeller is required")
-        .default(false),
 });
 
 

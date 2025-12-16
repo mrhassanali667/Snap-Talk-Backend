@@ -13,7 +13,7 @@ const loginUser = async (body) => {
             let err = new Error("Request body is missing or empty.")
             throw { message: err.message, code: 400 }
         }
-        authUserSchema.validateSync(body)
+        authUserSchema.parse(body)
         const user = await findUser({
             email: email
         })

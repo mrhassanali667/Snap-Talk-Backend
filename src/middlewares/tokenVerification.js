@@ -4,12 +4,15 @@ import 'dotenv/config'
 const tokenVerification = (req, res, next) => {
     try {
 
+        console.log(jwt.verify(req.headers.cookie.split('=')[1], process.env.JWT_KEY));
+
         if (req.headers?.authorization) {
             const token = req.headers?.authorization.split(" ")[1]
             const decoded =  jwt.verify(token, process.env.JWT_KEY)
             console.log(decoded)
             req.userEmail = decoded.email
             next()
+
         } else {
             res.status(400).json({
                 message: "token not provided",
@@ -19,6 +22,7 @@ const tokenVerification = (req, res, next) => {
 
     }
     catch (err) {
+        console.log(err)
         res.status(401).json({
             message: "token unauthorized ",
             status: 401
