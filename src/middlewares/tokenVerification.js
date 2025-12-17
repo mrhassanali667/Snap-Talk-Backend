@@ -3,15 +3,13 @@ import 'dotenv/config'
 
 const tokenVerification = (req, res, next) => {
     try {
-
-        console.log(jwt.verify(req.headers.cookie.split('=')[1], process.env.JWT_KEY));
-
+        console.log(req.cookies.token)
         if (req.headers?.authorization) {
             const token = req.headers?.authorization.split(" ")[1]
             const decoded =  jwt.verify(token, process.env.JWT_KEY)
             console.log(decoded)
             req.userEmail = decoded.email
-            next()
+            next();
 
         } else {
             res.status(400).json({
