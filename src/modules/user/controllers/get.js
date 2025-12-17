@@ -1,4 +1,5 @@
 import { getAllData, getDataById } from "../services/get.js"
+import Model from "../models/usermodel.js";
 
 const getAllController = async (req, res) => {
     try {
@@ -41,7 +42,42 @@ const getOneController = async (req, res) => {
     }
 }
 
+const checkUsernameController = async (req, res) => {
+    try {
+        const query = req.query;
+        if (!query.username) {
+            return res.status(400).json({
+                message: "username query parameter is required",
+                data: null,
+                status: 400
+            })
+        }
+
+        const user = await Model.findOne({ username: query.username });
+        if (user) {
+            return res.status(200).json({
+                message: "username is taken",
+                data: { available: false },
+                status: 200
+            })
+        }
+
+        res.status(200).json({
+            message: "username is available",
+            data: { available: true },
+            status: 200
+        })
+
+    } catch (error) {
+        res.status(500).json({
+            message: "internal server error",
+            status: 500
+        })
+    }
+}
+
 export {
     getAllController,
-    getOneController
+    getOneController,
+    checkUsernameController
 }

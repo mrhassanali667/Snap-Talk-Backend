@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { getAllController, getOneController } from './controllers/get.js';
+import { checkUsernameController, getAllController, getOneController } from './controllers/get.js';
 import { postController } from './controllers/post.js';
 import { updateController } from './controllers/update.js';
 import { deleteController } from './controllers/delete.js'
@@ -7,6 +7,7 @@ import { deleteController } from './controllers/delete.js'
 const userRoutes = Router();
 
 userRoutes.get('/', getAllController)
+userRoutes.get('/check-username', checkUsernameController)
 userRoutes.get('/user/:id', getOneController)
 userRoutes.post('/', postController)
 userRoutes.put('/:id', updateController)
