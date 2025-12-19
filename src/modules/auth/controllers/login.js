@@ -23,7 +23,7 @@ const loginController = async (req, res) => {
         console.log(error);
         let code = error?.code || 500
         res.status(code).json({
-            message: error?.message,
+            message: error?.message || "internal server error.",
             user: null,
             status: code
         })
