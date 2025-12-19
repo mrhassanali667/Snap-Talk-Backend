@@ -1,4 +1,5 @@
 import { findUser } from "../db/index.js"
+import Model from "../../user/models/usermodel.js"
 import bcrypt from 'bcrypt'
 import 'dotenv/config'
 import authUserSchema from "../schemas/authuserschema.js"
@@ -17,8 +18,8 @@ const loginUser = async (body) => {
             let err = new Error("usernameOrEmail and password are required.")
             throw { message: err.message, code: 400 }
         }
-        
-        const user = await findUser({
+
+        const user = await Model.findOne({
             $or: [
                 { email: usernameOrEmail },
                 { username: usernameOrEmail }
