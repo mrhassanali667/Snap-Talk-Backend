@@ -3,9 +3,9 @@ const logoutController = async (req, res) => {
         res.clearCookie('token', {
             httpOnly: true,
             secure: true,
-            sameSite: 'lax',
+            sameSite: 'none',
             path: '/api',
-            domain: 'snap-talk-web.netlify.app'
+            domain: 'https://snap-talk-web.netlify.app/'
         })
         return res.status(200).json({ message: "User logged out successfully." })
     } catch (error) {
