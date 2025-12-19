@@ -20,7 +20,8 @@ const loginController = async (req, res) => {
             token: token
         })
     } catch (error) {
-        let code = error?.code
+        console.log(error);
+        let code = error?.code || 500
         res.status(code).json({
             message: error?.message,
             user: null,
