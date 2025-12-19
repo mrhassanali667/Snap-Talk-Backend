@@ -1,8 +1,6 @@
-import { findUser } from "../db/index.js"
 import Model from "../../user/models/usermodel.js"
 import bcrypt from 'bcrypt'
 import 'dotenv/config'
-import authUserSchema from "../schemas/authuserschema.js"
 import jwt from 'jsonwebtoken'
 
 
