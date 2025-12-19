@@ -9,7 +9,7 @@ const registerController = async (req, res) => {
             secure: true,
             sameSite: 'lax',
             path: '/api',
-            domain: 'localhost',
+            domain: 'snap-talk-web.netlify.app',
             maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
         })
 

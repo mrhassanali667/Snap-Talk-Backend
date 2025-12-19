@@ -5,10 +5,10 @@ const logoutController = async (req, res) => {
             secure: true,
             sameSite: 'lax',
             path: '/api',
-            domain: 'localhost'
+            domain: 'snap-talk-web.netlify.app'
         })
         return res.status(200).json({ message: "User logged out successfully." })
-    } catch (error) {``
+    } catch (error) {
         console.error(error)
         return res.status(500).json({ message: "Internal server error." })
     }
