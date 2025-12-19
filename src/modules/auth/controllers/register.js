@@ -7,7 +7,7 @@ const registerController = async (req, res) => {
         res.cookie('token', token, {
             httpOnly: true,
             secure: true,
-            sameSite: 'none',
+            sameSite: 'lax',
             path: '/api',
             domain: 'localhost',
             maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
@@ -17,7 +17,7 @@ const registerController = async (req, res) => {
             message: "successfully register",
             user: user,
             status: 201,
-            token: token
+            token: token    
         })
     } catch (error) {
         let code = error?.code || 500

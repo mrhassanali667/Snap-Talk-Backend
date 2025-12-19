@@ -8,14 +8,21 @@ import jwt from 'jsonwebtoken'
 
 const loginUser = async (body) => {
     try {
-        const { email, password } = body
+        const { usernameOrEmail, password } = body
         if (!body || Object.keys(body).length === 0) {
             let err = new Error("Request body is missing or empty.")
             throw { message: err.message, code: 400 }
         }
-        authUserSchema.parse(body)
+        if (!usernameOrEmail || !password) {
+            let err = new Error("usernameOrEmail and password are required.")
+            throw { message: err.message, code: 400 }
+        }
+        
         const user = await findUser({
-            email: email
+            $or: [
+                { email: usernameOrEmail },
+                { username: usernameOrEmail }
+            ]
         })
         if (user) {
             let checkPass = bcrypt.compareSync(password, user.password)
@@ -31,15 +38,7 @@ const loginUser = async (body) => {
         }
     } catch (error) {
         console.log(error)
-        if (error?.code) {
-            if (error.code === 11000) {
-                let err = new Error("email already in use.")
-                throw { message: err?.message, code: 409 }
-            }
-            throw error
-        }
-
-        if (error?.name === "ValidationError") {
+        if (error?.message) {
             throw { message: error?.message, code: 400 }
         }
 

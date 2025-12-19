@@ -1,5 +1,4 @@
 import mongoose, { mongo, Schema } from "mongoose";
-import { fr, is } from "zod/locales";
 
 
 const dataSchema = new Schema({

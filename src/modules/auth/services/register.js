@@ -11,7 +11,7 @@ const signUpUser = async (body) => {
             let err = new Error("Request body is missing or empty.")
             throw { message: err.message, code: 400 }
         }
-        authUserSchema.parse(body)
+        await authUserSchema.validateAsync(body);
         const password = bcrypt.hashSync(body.password, 10)
         const newUser = await registerUser({
             ...body,
@@ -23,7 +23,7 @@ const signUpUser = async (body) => {
             email: newUser.email,
         })
         let token = jwt.sign({ email: newUser.email }, process.env.JWT_KEY)
-    return { user, token: token }
+        return { user, token: token }
     } catch (error) {
         console.log(error)
         if (error?.code) {

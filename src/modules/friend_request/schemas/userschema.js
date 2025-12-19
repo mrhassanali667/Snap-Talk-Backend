@@ -1,20 +1,30 @@
-import { z } from "zod";
+import Joi from "joi";
+import mongoose from "mongoose";
 
-export const userSchema = Yup.object({
-    sender: z
-        .string()
-        .min(1, "Sender is required"),
+const objectId = Joi.string().custom((value, helpers) => {
+  if (!mongoose.Types.ObjectId.isValid(value)) {
+    return helpers.error("any.invalid");
+  }
+  return value;
+}, "ObjectId validation");
 
-    receiver: z
-        .string()
-        .min(1, "Receiver is required"),
+const friendRequestSchema = Joi.object({
+  sender: objectId.required().messages({
+    "any.required": "Sender is required",
+    "any.invalid": "Sender must be a valid ObjectId",
+  }),
 
-    status: z
-        .enum(["pending", "accepted", "rejected"])
-        .optional()
-        .default("pending"),
+  receiver: objectId.required().messages({
+    "any.required": "Receiver is required",
+    "any.invalid": "Receiver must be a valid ObjectId",
+  }),
 
+  status: Joi.string()
+    .valid("pending", "accepted", "rejected")
+    .default("pending")
+    .messages({
+      "any.only": "Status must be pending, accepted, or rejected",
+    }),
 });
 
-
-export default userSchema
+export default friendRequestSchema;
