@@ -1,7 +1,7 @@
-import Model from "../../user/models/usermodel.js"
 import bcrypt from 'bcrypt'
 import 'dotenv/config'
 import jwt from 'jsonwebtoken'
+import { findUser } from '../db/index.js'
 
 
 
@@ -17,12 +17,13 @@ const loginUser = async (body) => {
             throw { message: err.message, code: 400 }
         }
 
-        const user = await Model.findOne({
+        const user = await findUser({
             $or: [
                 { email: usernameOrEmail },
                 { username: usernameOrEmail }
             ]
         })
+        console.log(user);
         if (user) {
             let checkPass = bcrypt.compareSync(password, user.password)
             if (checkPass) {
