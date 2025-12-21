@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt'
 import 'dotenv/config'
 import jwt from 'jsonwebtoken'
 import { findUser } from '../db/index.js'
+import User from '../../user/models/usermodel.js'
 
 
 
@@ -17,20 +18,18 @@ const loginUser = async (body) => {
             throw { message: err.message, code: 400 }
         }
 
-        const user = await findUser({
+        const authUser = await findUser({
             $or: [
                 { email: usernameOrEmail },
                 { username: usernameOrEmail }
             ]
         })
-        console.log(user);
-        if (user) {
-            let checkPass = bcrypt.compareSync(password, user.password)
+        if (authUser) {
+            let checkPass = bcrypt.compareSync(password, authUser.password)
             if (checkPass) {
-                let data = user.toObject()
-                delete data.password
-                let token = jwt.sign({ email: user.email }, process.env.JWT_KEY)
-                return { data, token: token }
+                const user = await User.findOne({ authId: authUser._id });
+                let token = jwt.sign({ _id: user._id }, process.env.JWT_KEY)
+                return { data: user, token: token }
             }
             throw { message: new Error("incorrect password").message, code: 400 }
         } else {

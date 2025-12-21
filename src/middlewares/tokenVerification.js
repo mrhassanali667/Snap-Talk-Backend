@@ -8,7 +8,7 @@ const tokenVerification = (req, res, next) => {
             const token = req?.cookies?.token
             const decoded =  jwt.verify(token, process.env.JWT_KEY)
             console.log(decoded)
-            req.userEmail = decoded.email
+            req.userId = decoded._id
             next();
 
         } else {

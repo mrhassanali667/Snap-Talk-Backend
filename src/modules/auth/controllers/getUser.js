@@ -2,8 +2,7 @@ import User from "../../user/models/usermodel.js";
 
 const getUserController = async (req, res) => {
     try {
-        console.log("Request User Email:", req.userEmail);
-        const user = await User.findOne({ email: req.userEmail }); // Assuming user is attached to req in a previous middleware like authentication
+        const user = await User.findById(req.userId); // Assuming user is attached to req in a previous middleware like authentication
         if (user) {
             console.log("Fetched User:", user);
             return res.status(200).json({

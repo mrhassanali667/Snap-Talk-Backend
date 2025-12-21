@@ -2,7 +2,7 @@ import mongoose, { mongo, Schema } from "mongoose";
 
 
 const dataSchema = new Schema({
-    authId: { type: mongoose.Types.ObjectId, required: true, unique: true },
+    authId: { type: mongoose.Types.ObjectId, required: true, unique: true , ref: 'Auth' },
     username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
     about: { type: String, default: "" },
