@@ -10,10 +10,9 @@ const updateController = async (req, res) => {
             status: 200
         })
     } catch (error) {
-        console.log(error)
-        let code = error?.code
+        let code = error?.code || 500
         res.status(code).json({
-            message: error?.message,
+            message: error?.message || "internal server error",
             data: null,
             status: code
         })

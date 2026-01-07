@@ -13,7 +13,11 @@ const userSchema = Joi.object({
     "any.required": "authId is required",
     "any.invalid": "authId must be a valid ObjectId",
   }),
-
+  fullName: Joi.string()
+    .allow("")
+    .messages({
+      "string.base": "Full name must be a string",
+    }),
   username: Joi.string()
     .min(3)
     .max(30)

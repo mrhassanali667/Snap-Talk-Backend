@@ -22,7 +22,7 @@ const signUpUser = async (body) => {
             username: newUser.username,
             email: newUser.email,
         })
-        let token = jwt.sign({ email: newUser.email }, process.env.JWT_KEY)
+        let token = jwt.sign({ email: user._id }, process.env.JWT_KEY)
         return { user, token: token }
     } catch (error) {
         console.log(error)
