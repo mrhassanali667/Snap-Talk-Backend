@@ -1,7 +1,10 @@
 import mongoose from "mongoose";
 import Model from "../models/usermodel.js"
 
-const getAll = async () => await Model.find();
+
+const getAll = async (id) => await Model.find({
+    _id: { $ne: id }
+});
 const getOne = async (id) => await Model.findById(id)
 const createData = async (data) => await Model.create(data);
 const updateDataById = async (id, data) => await Model.findByIdAndUpdate(id, data)

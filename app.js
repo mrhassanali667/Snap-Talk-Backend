@@ -11,7 +11,7 @@ const app = express()
 
 app.use(cors(
     {
-        origin: 'https://snap-talk-web.netlify.app',
+        origin: ['https://snap-talk-web.netlify.app', 'http://localhost:5173'],
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
         credentials: true
     }

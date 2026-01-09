@@ -3,7 +3,7 @@ import Model from "../models/usermodel.js";
 
 const getAllController = async (req, res) => {
     try {
-        const users = await getAllData(req.body)
+        const users = await getAllData(req.userId)
         res.status(200).json({
             message: "users successfully fetched",
             data: users,

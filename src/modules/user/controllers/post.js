@@ -42,5 +42,6 @@ const uploadProfilePictureController = async (req, res) => {
 }
 
 export {
-    postController
+    postController,
+    uploadProfilePictureController
 }
