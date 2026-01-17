@@ -14,7 +14,7 @@ const tokenVerification = (req, res, next) => {
         } else {
             res.status(400).json({
                 message: "token not provided",
-                status: 400
+                status: 400 
             })
         }
 

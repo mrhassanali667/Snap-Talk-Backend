@@ -2,8 +2,10 @@ import { getAllData, getDataById } from "../services/get.js"
 import Model from "../models/usermodel.js";
 
 const getAllController = async (req, res) => {
+    console.log("users request")
     try {
-        const users = await getAllData(req.userId)
+        const users = await getAllData()
+        console.log(users)
         res.status(200).json({
             message: "users successfully fetched",
             data: users,

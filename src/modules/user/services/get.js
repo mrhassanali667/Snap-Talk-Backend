@@ -1,9 +1,9 @@
 import mongoose from "mongoose"
 import { getAll, getOne } from "../db/index.js"
 
-const getAllData = async (id) => {
+const getAllData = async () => {
     try {
-        return await getAll(id)
+        return await getAll()
     } catch (error) {
         throw error
     }
