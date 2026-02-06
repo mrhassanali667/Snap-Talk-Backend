@@ -8,7 +8,7 @@ import { createServer } from 'http'
 import { Server } from 'socket.io'
 import jwt from 'jsonwebtoken'
 import 'dotenv/config'
-import Message from './src/modules/message/models/messagemodel.js'
+import Message from './src/modules/message/models/message_model.js'
 
 
 const port = 3000

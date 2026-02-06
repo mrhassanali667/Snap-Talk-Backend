@@ -2,7 +2,7 @@ import { Router } from 'express'
 import { registerController } from './controllers/register.js';
 import { loginController } from './controllers/login.js';
 import { getUserController } from './controllers/getUser.js';
-import tokenVerification from '../../middlewares/tokenVerification.js';
+import tokenVerification from '../../middlewares/token_verification.js';
 import { logoutController } from './controllers/logout.js';
 
 const authRoutes = Router();

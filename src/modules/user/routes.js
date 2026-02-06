@@ -3,7 +3,7 @@ import { checkUsernameController, getAllController, getOneController } from './c
 import { postController, uploadProfilePictureController } from './controllers/post.js';
 import { updateController } from './controllers/update.js';
 import { deleteController } from './controllers/delete.js'
-import tokenVerification from '../../middlewares/tokenVerification.js';
+import tokenVerification from '../../middlewares/token_verification.js';
 import multer from 'multer';
 
 const userRoutes = Router();

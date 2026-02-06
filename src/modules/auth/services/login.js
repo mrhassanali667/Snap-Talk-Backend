@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt'
 import 'dotenv/config'
 import jwt from 'jsonwebtoken'
 import { findUser } from '../db/index.js'
-import User from '../../user/models/usermodel.js'
+import User from '../../user/models/user_model.js'
 
 
 

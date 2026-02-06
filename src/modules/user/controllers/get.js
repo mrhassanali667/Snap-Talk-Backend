@@ -1,5 +1,5 @@
 import { getAllData, getDataById } from "../services/get.js"
-import Model from "../models/usermodel.js";
+import Model from "../models/user_model.js";
 
 const getAllController = async (req, res) => {
     try {

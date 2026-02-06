@@ -1,7 +1,7 @@
 import { createData } from "../db/index.js"
 import { v2 as cloudinary } from 'cloudinary'
 import jwt from 'jsonwebtoken'
-import Model from '../../auth/models/authusermodel.js'
+import Model from '../../auth/models/authuser_model.js'
 import sharp from "sharp"
 import fsExtra from "fs-extra/esm"
 

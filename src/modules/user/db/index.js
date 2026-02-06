@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import Model from "../models/usermodel.js"
+import Model from "../models/user_model.js"
 
 
 const getAll = async () => await Model.find();

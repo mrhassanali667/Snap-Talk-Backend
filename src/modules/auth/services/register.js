@@ -3,7 +3,7 @@ import { registerUser } from "../db/index.js"
 import bcrypt from 'bcrypt'
 import authUserSchema from "../schemas/authuserschema.js"
 import 'dotenv/config'
-import User from "../../user/models/usermodel.js"
+import User from "../../user/models/user_model.js"
 
 const signUpUser = async (body) => {
     try {
