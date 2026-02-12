@@ -6,7 +6,7 @@ import { deleteController } from './controllers/delete.js'
 
 const userRoutes = Router();
 
-userRoutes.get('/', getAllController)
+userRoutes.post('/', getAllController)
 userRoutes.get('/user/:id', getOneController)
 userRoutes.post('/', postController)
 userRoutes.put('/:id', updateController)

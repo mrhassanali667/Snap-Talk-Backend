@@ -1,6 +1,7 @@
 import Joi from "joi";
 import mongoose from "mongoose";
 
+// ObjectId validation helper
 const objectId = Joi.string().custom((value, helpers) => {
     if (!mongoose.Types.ObjectId.isValid(value)) {
         return helpers.error("any.invalid");

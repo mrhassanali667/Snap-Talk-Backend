@@ -9,6 +9,7 @@ import { Server } from 'socket.io'
 import jwt from 'jsonwebtoken'
 import 'dotenv/config'
 import Message from './src/modules/message/models/message_model.js'
+import { createConversation } from './src/modules/message/db/conversation.js'
 
 
 const port = 3000
@@ -36,7 +37,8 @@ app.use('/api', routes)
 
 io.on('connection', (socket) => {
     try {
-        const token = socket.handshake?.headers?.cookie?.split('=')[1];
+        console.log(socket.handshake?.headers)
+        const token = socket.handshake?.headers?.cookie?.split('token=')[1];
         const { _id } = jwt.verify(token, process?.env?.JWT_KEY);
         if (_id) {
             socket.join(_id);
@@ -53,10 +55,26 @@ io.on('connection', (socket) => {
     });
 
 
-    socket.on('send-message', (data) => {
-        const message = Message
-        io.to(data.userId).emit('recieve-message', data);
-    })
+
+    socket.on("send-message", async (data, cb) => {
+        try {
+            const sockets = await io.in(data.roomId).fetchSockets();
+            console.log(sockets.map(s => s));
+
+
+            const conversation = createConversation({
+                participants: [data?.sender]
+            })
+            // const msg = await Message.create(data);
+            io.to(data?.userId).emit("recieve-message", data.message);
+
+            cb({ status: "ok" });
+        } catch (err) {
+            console.log(err)
+            cb({ status: "error", message: err });
+        }
+    });
+
 
     socket.on("getmyrooms", () => {
         const rooms = [...socket.rooms];

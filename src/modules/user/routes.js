@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { checkUsernameController, getAllController, getOneController } from './controllers/get.js';
-import { postController, uploadProfilePictureController } from './controllers/post.js';
+import { postController, postGroupController, uploadProfilePictureController } from './controllers/post.js';
 import { updateController } from './controllers/update.js';
 import { deleteController } from './controllers/delete.js'
 import tokenVerification from '../../middlewares/token_verification.js';
@@ -22,6 +22,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage })
 
 userRoutes.get('/', getAllController)
+userRoutes.get('/group', postGroupController)
 userRoutes.get('/check-username', checkUsernameController)
 userRoutes.get('/user/:id', getOneController)
 userRoutes.post('/', postController)

@@ -1,9 +1,11 @@
 import { createData } from "../db/index.js"
 import { v2 as cloudinary } from 'cloudinary'
 import jwt from 'jsonwebtoken'
-import Model from '../../auth/models/authuser_model.js'
+import Auth from '../../auth/models/authuser_model.js'
 import sharp from "sharp"
 import fsExtra from "fs-extra/esm"
+import groupSchema from "../schemas/group_schema.js"
+import Group from "../models/group_model.js"
 
 const postData = async (token, body) => {
     try {
@@ -12,7 +14,7 @@ const postData = async (token, body) => {
             throw { message: err.message, code: 400 }
         }
         const { email } = jwt.verify(token, process.env.JWT_KEY)
-        const authUser = await Model.findOne({ email: email })
+        const authUser = await Auth.findOne({ email: email })
         const data = await createData({
             authId: authUser._id,
             email: email,
@@ -35,6 +37,21 @@ const postData = async (token, body) => {
 
         throw { message: "internal server error.", code: 500 }
 
+    }
+}
+
+const createGroup = async (token, body) => {
+    try {
+        const { _id } = jwt.verify(token, process.env.JWT_KEY)
+        await groupSchema.validateAsync(body)
+        const group = await Group.create({
+            ...body,
+            createdBy: _id
+        })
+        return group
+    } catch (error) {
+        console.log(error)
+        throw { message: error?.message || "internal server error.", code: 500 }
     }
 }
 

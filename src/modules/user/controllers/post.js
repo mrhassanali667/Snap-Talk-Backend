@@ -3,7 +3,7 @@ import { updateDataById } from "../db/index.js"
 
 const postController = async (req, res) => {
     try {
-        const token = req.headers?.authorization.split(" ")[1]
+        const token = req?.cookies?.token
         const user = await postData(token, req.body)
         res.status(201).json({
             message: "user successfully added",
@@ -15,6 +15,25 @@ const postController = async (req, res) => {
         res.status(code).json({
             message: error?.message,
             data: null,
+            status: code
+        })
+
+    }
+}
+
+const postGroupController = async (req, res) => {
+    try {
+        const token = req.cookies?.token
+        const group = await createGroup(token, req.body)
+        res.status(201).json({
+            message: "group successfully created",
+            data: group,
+            status: 201
+        })
+    } catch (error) {
+        let code = error.code || 500 
+        res.status(code).json({
+            message: error?.message || "internal server error.",
             status: code
         })
 
@@ -43,5 +62,6 @@ const uploadProfilePictureController = async (req, res) => {
 
 export {
     postController,
-    uploadProfilePictureController
+    uploadProfilePictureController,
+    postGroupController
 }
