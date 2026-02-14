@@ -75,7 +75,7 @@ io.on('connection', (socket) => {
                         lastMessage: msg?._id
                     })
                     console.log("New conversation created:", newConversation);
-                    Message.create(msg)
+                    Message.create({ ...msg, conversation: newConversation._id })
                         .then((createdMsg) => {
                             console.log("Message created:", createdMsg);
                             io.to(roomId).emit("recieve-message", createdMsg);
@@ -86,16 +86,20 @@ io.on('connection', (socket) => {
 
                     cb({ status: "ok" });
                 }
-            }
+            } else {
 
-            const group = await Group.findById(roomId);
-            if (group) {
-                console.log("Group collection ki ID hai");
-            }
+                const group = await Group.findById(roomId);
+                if (group) {
+                    const conversation = createConversation({
+                        participants: [data?.sender],
+                        isGroup: true,
+                        group: group._id
+                    })
+                } else {
+                    throw new Error("No user or group found with the provided room ID.");
+                }
 
-            const conversation = createConversation({
-                participants: [data?.sender]
-            })
+            }
 
         } catch (err) {
             console.log(err)
