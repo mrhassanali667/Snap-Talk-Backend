@@ -27,4 +27,4 @@ const ConversationSchema = new mongoose.Schema(
     },
     { timestamps: true }
 );
-export default mongoose.model("Conversation", ConversationSchema);
+    export default mongoose.model("Conversation", ConversationSchema);

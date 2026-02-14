@@ -9,7 +9,10 @@ import { Server } from 'socket.io'
 import jwt from 'jsonwebtoken'
 import 'dotenv/config'
 import Message from './src/modules/message/models/message_model.js'
-import { createConversation } from './src/modules/message/db/conversation.js'
+import Conversatoin from './src/modules/message/models/conversation_model.js'
+import User from './src/modules/user/models/user_model.js'
+import Group from './src/modules/user/models/group_model.js'
+import { createConversation, updateConversation } from './src/modules/message/db/conversation.js'
 
 
 const port = 3000
@@ -56,19 +59,44 @@ io.on('connection', (socket) => {
 
 
 
-    socket.on("send-message", async (data, cb) => {
+    socket.on("send-message", async ({ msg, roomId }, cb) => {
         try {
-            const sockets = await io.in(data.roomId).fetchSockets();
-            console.log(sockets.map(s => s));
+            // const sockets = await io.in(roomId).fetchSockets();
+            // console.log(sockets.map(s => s));
 
+            const user = await User.findById(roomId);
+            if (user) {
+                const conversation = await Conversatoin.findOne({ participants: { $in: [user._id, msg?.sender] }, isGroup: false });
+                if (conversation) {
+                    const updatedConversation = await updateConversation(conversation._id, { lastMessage: msg?._id });
+                } else {
+                    const newConversation = await createConversation({
+                        participants: [user._id, msg?.sender],
+                        lastMessage: msg?._id
+                    })
+                    console.log("New conversation created:", newConversation);
+                    Message.create(msg)
+                        .then((createdMsg) => {
+                            console.log("Message created:", createdMsg);
+                            io.to(roomId).emit("recieve-message", createdMsg);
+                        }).catch((err) => {
+                            console.error("Error creating message:", err);
+                            throw new Error("Failed to create message.");
+                        });
+
+                    cb({ status: "ok" });
+                }
+            }
+
+            const group = await Group.findById(roomId);
+            if (group) {
+                console.log("Group collection ki ID hai");
+            }
 
             const conversation = createConversation({
                 participants: [data?.sender]
             })
-            // const msg = await Message.create(data);
-            io.to(data?.userId).emit("recieve-message", data.message);
 
-            cb({ status: "ok" });
         } catch (err) {
             console.log(err)
             cb({ status: "error", message: err });
