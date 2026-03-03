@@ -21,7 +21,6 @@ const httpServer = createServer(app);
 const io = new Server(httpServer, {
     cors: {
         origin: "http://localhost/5173/",
-        methods: ["GET", "POST"],
         credentials: true
     }
 });
@@ -37,6 +36,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/api', routes)
 
+
+const createMessage = async (msg, convId) => {
+    try {
+        const createdMsg = await Message.create({ ...msg, conversationId: convId })
+        console.log("Message created:", createdMsg);
+        await updateConversation(convId, { lastMessage: createdMsg._id });
+    } catch (error) {
+        console.error("Error creaxting message:", err);
+        throw new Error("Failed to create message.");
+    }
+}
 
 io.on('connection', (socket) => {
     try {
@@ -59,31 +69,28 @@ io.on('connection', (socket) => {
 
 
 
-    socket.on("send-message", async ({ msg, roomId }, cb) => {
+    socket.on("send-message", async ({ message, roomId }, cb) => {
         try {
             // const sockets = await io.in(roomId).fetchSockets();
             // console.log(sockets.map(s => s));
-
+            console.log("Received message:", message, "for room:", roomId);
             const user = await User.findById(roomId);
             if (user) {
-                const conversation = await Conversatoin.findOne({ participants: { $in: [user._id, msg?.sender] }, isGroup: false });
+                const conversation = await Conversatoin.findOne({ participants: { $in: [user._id, message?.sender] }, isGroup: false });
                 if (conversation) {
-                    const updatedConversation = await updateConversation(conversation._id, { lastMessage: msg?._id });
+                    console.log("Existing conversation found:", conversation);
+                    const msg = createMessage(message, conversation._id)
+                    io.to(roomId).emit("recieve-message", msg);
+
+                    cb({ status: "ok" });
                 } else {
                     const newConversation = await createConversation({
-                        participants: [user._id, msg?.sender],
-                        lastMessage: msg?._id
+                        participants: [user._id, message?.sender],
+                        lastMessage: message?._id
                     })
+                    const msg = createMessage(message, conversation._id)
                     console.log("New conversation created:", newConversation);
-                    Message.create({ ...msg, conversation: newConversation._id })
-                        .then((createdMsg) => {
-                            console.log("Message created:", createdMsg);
-                            io.to(roomId).emit("recieve-message", createdMsg);
-                        }).catch((err) => {
-                            console.error("Error creating message:", err);
-                            throw new Error("Failed to create message.");
-                        });
-
+                    io.to(roomId).emit("recieve-message", msg);
                     cb({ status: "ok" });
                 }
             } else {
