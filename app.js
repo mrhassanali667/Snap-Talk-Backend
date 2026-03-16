@@ -9,10 +9,10 @@ import { Server } from 'socket.io'
 import jwt from 'jsonwebtoken'
 import 'dotenv/config'
 import Message from './src/modules/message/models/message_model.js'
-import Conversatoin from './src/modules/message/models/conversation_model.js'
+import Conversatoin from './src/modules/conversation/models/conversation_model.js'
 import User from './src/modules/user/models/user_model.js'
-import Group from './src/modules/user/models/group_model.js'
-import { createConversation, updateConversation } from './src/modules/message/db/conversation.js'
+import Group from './src/modules/group/models/group_model.js'
+import { createConversation, updateConversation } from './src/modules/conversation/db/index.js'
 
 
 const port = 3000
@@ -42,6 +42,7 @@ const createMessage = async (msg, convId) => {
         const createdMsg = await Message.create({ ...msg, conversationId: convId })
         console.log("Message created:", createdMsg);
         await updateConversation(convId, { lastMessage: createdMsg._id });
+        return createdMsg;
     } catch (error) {
         console.error("Error creaxting message:", err);
         throw new Error("Failed to create message.");
@@ -71,15 +72,13 @@ io.on('connection', (socket) => {
 
     socket.on("send-message", async ({ message, roomId }, cb) => {
         try {
-            // const sockets = await io.in(roomId).fetchSockets();
-            // console.log(sockets.map(s => s));
             console.log("Received message:", message, "for room:", roomId);
             const user = await User.findById(roomId);
             if (user) {
                 const conversation = await Conversatoin.findOne({ participants: { $in: [user._id, message?.sender] }, isGroup: false });
                 if (conversation) {
                     console.log("Existing conversation found:", conversation);
-                    const msg = createMessage(message, conversation._id)
+                    const msg = await createMessage(message, conversation._id)
                     io.to(roomId).emit("recieve-message", msg);
 
                     cb({ status: "ok" });
@@ -88,7 +87,7 @@ io.on('connection', (socket) => {
                         participants: [user._id, message?.sender],
                         lastMessage: message?._id
                     })
-                    const msg = createMessage(message, conversation._id)
+                    const msg = await createMessage(message, newConversation._id)
                     console.log("New conversation created:", newConversation);
                     io.to(roomId).emit("recieve-message", msg);
                     cb({ status: "ok" });
@@ -97,11 +96,28 @@ io.on('connection', (socket) => {
 
                 const group = await Group.findById(roomId);
                 if (group) {
-                    const conversation = createConversation({
-                        participants: [data?.sender],
-                        isGroup: true,
-                        group: group._id
-                    })
+
+                    const conversation = await Conversatoin.findOne({ participants: { $in: [user._id, message?.sender] }, isGroup: false, groupId: roomId });
+                    if (conversation) {
+                        console.log("Existing conversation found:", conversation);
+                        const msg = await createMessage(message, conversation._id)
+                        io.to(roomId).emit("recieve-message", msg);
+
+                        cb({ status: "ok" });
+                    } else {
+                        const newConversation = await createConversation({
+                            participants: group?.members,
+                            lastMessage: message?._id,
+                            isGroup: true,
+                            groupId: roomId,
+                            groupAdmin: message?.sender
+                        })
+                        const msg = await createMessage(message, newConversation._id)
+                        console.log("New conversation created:", newConversation);
+                        io.to(roomId).emit("recieve-message", msg);
+                        cb({ status: "ok" });
+                    }
+
                 } else {
                     throw new Error("No user or group found with the provided room ID.");
                 }

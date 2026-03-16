@@ -20,6 +20,10 @@ const ConversationSchema = new mongoose.Schema(
         },
 
         groupName: String,
+        groupId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Group"
+        },
         groupAdmin: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
@@ -27,4 +31,4 @@ const ConversationSchema = new mongoose.Schema(
     },
     { timestamps: true }
 );
-    export default mongoose.model("Conversation", ConversationSchema);
+export default mongoose.model("Conversation", ConversationSchema);
